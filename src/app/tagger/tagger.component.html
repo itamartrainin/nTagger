@@ -1,0 +1,119 @@
+<div *ngIf="reference" fxLayout="column" class="container">
+    <div fxFlex="45%">
+        <div fxLayout="row" class="full-width-height">
+            <div fxFlex="5%"></div>
+            <div fxFlex="90%" class="word">
+                {{reference}}
+            </div>
+            <div fxFlex="5%" class="info">
+                <mat-icon (click)="openDialog()">info</mat-icon>
+            </div>
+        </div>
+    </div>
+    <div fxFlex="15%">
+        <div class="list other-list" fxLayout="row">
+            <div fxFlex="20%"></div>
+            <div fxFlex="7%" class="margin-auto">
+                <button mat-icon-button 
+                        class="unchaged-btn"  
+                        (click)="recordCandidate({value: reference, type: 'unchanged'})"
+                        matTooltip="תצורה נכונה">
+                    <mat-icon class="thumb-up">thumb_up</mat-icon> 
+                </button>
+            </div>
+            <mat-divider vertical="true"></mat-divider>
+            <mat-form-field fxFlex="46%" class="other-option">
+                <input #other matInput placeholder="הכנס תצורה נכונה" (keyup.enter)="recordCandidate({type: 'free-text'})">
+            </mat-form-field>
+            <!-- <div fxFlex="10%" class="or"> 
+                - או -
+            </div> -->
+            <mat-divider vertical="true"></mat-divider>
+            <div fxFlex="7%" class="margin-auto">
+                <button mat-icon-button 
+                        class="invalid-btn"  
+                        (click)="recordCandidate({type: 'invalid'})"
+                        matTooltip="זהו לא ...">
+                    <mat-icon class="thumb-down">thumb_down</mat-icon>
+                </button>
+            </div>
+            <div fxFlex="20%"></div>
+        </div>
+    </div>
+    <div fxFlex="20%" class="recommendations">
+        <div style="font-size: 16pt;">רשימת המלצות</div>
+        <div fxLayout="row">
+            <div fxFlex="5%"></div>
+            <div fxFlex="90%">
+                <div style="margin: auto; display: flex;">
+                    <ng-container *ngFor="let recommendation of top10;let index=index;let even=even">
+                        <!-- <div fxFlex={{recommandBtnSize}} *ngIf="even" class="recommendation-container"> -->
+                        <div *ngIf="even" class="recommendation-container">
+                            <button mat-raised-button 
+                                    class="recommendation-btn" 
+                                    [matTooltip]="top10[index].value"
+                                    (click)="recordCandidate(top10[index])">
+                                {{top10[index].value}}
+                            </button>
+                            <button mat-raised-button 
+                                    *ngIf="top10[index+5]"
+                                    class="recommendation-btn" 
+                                    [matTooltip]="top10[index+1].value"
+                                    (click)="recordCandidate(top10[index+1])">
+                                {{top10[index+1].value}}
+                            </button>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+            <div fxFlex="5%">
+                <button mat-icon-button 
+                        *ngIf="!expand" 
+                        matTooltip="הצג אופציות נוספות" 
+                        (click)="expand = !expand">
+                        <mat-icon>expand_more</mat-icon>
+                </button>
+                <button mat-icon-button 
+                        *ngIf="expand" 
+                        matTooltip="הצג פחות אופציות" 
+                        (click)="expand = !expand">
+                        <mat-icon>expand_less</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div fxFlex="20%" *ngIf="expand">
+        <div fxFlex="33.33%">
+            <div class="title">
+                תחיליות/סופיות
+            </div>
+            <div class="list perfix-list">
+                <div *ngFor="let candidate of prefixCandidates" class="word-candidate">
+                    <button mat-button (click)="recordCandidate(candidate)" [matTooltip]="candidate.value">{{candidate.value}}</button>
+                </div>                
+            </div>
+        </div>
+        <mat-divider vertical="true"></mat-divider>
+        <div fxFlex="33.33%">
+            <div class="title">
+                למטייזר
+            </div>
+            <div class="list lem-list">
+                <div *ngFor="let candidate of lemCandidates" class="word-candidate">
+                    <button mat-button (click)="recordCandidate(candidate)" [matTooltip]="candidate.value">{{candidate.value}}</button>
+                </div>
+            </div>
+        </div>
+        <mat-divider vertical="true"></mat-divider>
+        <div fxFlex="33.33%">
+            <div class="title">
+                w2v
+            </div>
+            <div class="list w2v-list">
+                <div *ngFor="let candidate of w2vCandidates" class="word-candidate">
+                    <button mat-button (click)="recordCandidate(candidate)" [matTooltip]="candidate.value">{{candidate.value}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
